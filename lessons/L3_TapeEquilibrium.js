@@ -70,22 +70,57 @@ function solution(A) {
   return min;
 }
 
-// Attempt 2: Optimized (O(N))
-function solution(A) {
-  const N = A.length;
+// Attempt 2: Optimized (O(N + M))
+function solution(S, P, Q) {
+  const M = P.length;
 
-  let min;
-  let sumLeft = 0;
-  let sumRight = A.reduce((a, c) => a + c);
+  const occurrenceA = [0];
+  const occurrenceC = [0];
+  const occurrenceG = [0];
+  const occurrenceT = [0];
 
-  for (let P = 0; P < N - 1; P++) {
-    sumLeft += A[P];
-    sumRight -= A[P];
+  const arrayS = [...S];
+  arrayS.forEach((s, i) => {
+    switch (s) {
+      case 'A':
+        occurrenceA[i + 1] = occurrenceA[i] + 1;
+        occurrenceC[i + 1] = occurrenceC[i];
+        occurrenceG[i + 1] = occurrenceG[i];
+        occurrenceT[i + 1] = occurrenceT[i];
+        break;
+      case 'C':
+        occurrenceC[i + 1] = occurrenceC[i] + 1;
+        occurrenceA[i + 1] = occurrenceA[i];
+        occurrenceG[i + 1] = occurrenceG[i];
+        occurrenceT[i + 1] = occurrenceT[i];
+        break;
+      case 'G':
+        occurrenceG[i + 1] = occurrenceG[i] + 1;
+        occurrenceC[i + 1] = occurrenceC[i];
+        occurrenceA[i + 1] = occurrenceA[i];
+        occurrenceT[i + 1] = occurrenceT[i];
+        break;
+      case 'T':
+        occurrenceT[i + 1] = occurrenceT[i] + 1;
+        occurrenceC[i + 1] = occurrenceC[i];
+        occurrenceG[i + 1] = occurrenceG[i];
+        occurrenceA[i + 1] = occurrenceA[i];
+        break;
+    }
+  });
 
-    if (min == undefined || Math.abs(sumLeft - sumRight) < min) {
-      min = Math.abs(sumLeft - sumRight);
+  let result = [];
+  for (let i = 0; i < M; i++) {
+    if (occurrenceA[Q[i] + 1] > occurrenceA[P[i]]) {
+      result.push(1);
+    } else if (occurrenceC[Q[i] + 1] > occurrenceC[P[i]]) {
+      result.push(2);
+    } else if (occurrenceG[Q[i] + 1] > occurrenceG[P[i]]) {
+      result.push(3);
+    } else {
+      result.push(4);
     }
   }
 
-  return min;
+  return result;
 }
