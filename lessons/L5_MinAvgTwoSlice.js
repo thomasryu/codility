@@ -48,40 +48,40 @@ Unauthorized copying, publication or disclosure prohibited.
 */
 
 function solution(A) {
-  let result = -1;
-  let minAverage;
+  let result = -1
+  let minAverage
 
   // A slice with 4 or more elements always have a smaller slice with a lower average
   // that is because a slice composed of smaller slices can never have a lower average than its parts
   // thus we only need to check slices with length 2 or 3
 
   // We create slice maps for sizes 2 and search for the smallest average
-  const twoSlices = [];
+  const twoSlices = []
   for (let i = 0; i < A.length - 1; i++) {
-    twoSlices[i] = (A[i] + A[i + 1]) / 2;
+    twoSlices[i] = (A[i] + A[i + 1]) / 2
   }
   twoSlices.forEach((a, i) => {
     if (minAverage == undefined || a < minAverage) {
-      minAverage = a;
-      result = i;
+      minAverage = a
+      result = i
     }
-  });
+  })
 
   if (A.length <= 2) {
-    return result;
+    return result
   }
 
   // If A.length > 2, we also search for slices of size 3
-  const threeSlices = [];
+  const threeSlices = []
   for (let i = 0; i < A.length - 2; i++) {
-    threeSlices[i] = (A[i] + A[i + 1] + A[i + 2]) / 3;
+    threeSlices[i] = (A[i] + A[i + 1] + A[i + 2]) / 3
   }
   threeSlices.forEach((a, i) => {
     if (minAverage == undefined || a < minAverage) {
-      minAverage = a;
-      result = i;
+      minAverage = a
+      result = i
     }
-  });
+  })
 
-  return result;
+  return result
 }
