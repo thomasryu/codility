@@ -72,6 +72,8 @@ function solution(A) {
     while (openings[j] <= closings[i] && j < N) {
       j++
     }
+
+    // We count the number of openings which have not been closed yet
     result += j - i - 1
   }
 
