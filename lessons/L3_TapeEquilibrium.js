@@ -48,79 +48,42 @@ Unauthorized copying, publication or disclosure prohibited.
 
 // Attempt 1: Unoptimized (O(Nˆ2))
 function solution(A) {
-  const N = A.length;
-  let min = -1;
+  const N = A.length
+  let min = -1
 
   for (let P = 1; P < N; P++) {
-    let split1 = 0;
+    let split1 = 0
     for (let j = 0; j < P; j++) {
-      split1 += A[j];
+      split1 += A[j]
     }
 
-    let split2 = 0;
+    let split2 = 0
     for (let j = P; j < N; j++) {
-      split2 += A[j];
+      split2 += A[j]
     }
 
     if (min === -1 || Math.abs(split1 - split2) < min) {
-      min = Math.abs(split1 - split2);
+      min = Math.abs(split1 - split2)
     }
   }
 
-  return min;
+  return min
 }
 
-// Attempt 2: Optimized (O(N + M))
-function solution(S, P, Q) {
-  const M = P.length;
+// Attempt 2: Optimized (O(N))
+function solution(A) {
+  let left = 0
+  let right = A.reduce((a, c) => a + c)
 
-  const occurrenceA = [0];
-  const occurrenceC = [0];
-  const occurrenceG = [0];
-  const occurrenceT = [0];
+  let result = 2000
+  for (let i = 0; i < A.length - 1; i++) {
+    left += A[i]
+    right -= A[i]
 
-  const arrayS = [...S];
-  arrayS.forEach((s, i) => {
-    switch (s) {
-      case 'A':
-        occurrenceA[i + 1] = occurrenceA[i] + 1;
-        occurrenceC[i + 1] = occurrenceC[i];
-        occurrenceG[i + 1] = occurrenceG[i];
-        occurrenceT[i + 1] = occurrenceT[i];
-        break;
-      case 'C':
-        occurrenceC[i + 1] = occurrenceC[i] + 1;
-        occurrenceA[i + 1] = occurrenceA[i];
-        occurrenceG[i + 1] = occurrenceG[i];
-        occurrenceT[i + 1] = occurrenceT[i];
-        break;
-      case 'G':
-        occurrenceG[i + 1] = occurrenceG[i] + 1;
-        occurrenceC[i + 1] = occurrenceC[i];
-        occurrenceA[i + 1] = occurrenceA[i];
-        occurrenceT[i + 1] = occurrenceT[i];
-        break;
-      case 'T':
-        occurrenceT[i + 1] = occurrenceT[i] + 1;
-        occurrenceC[i + 1] = occurrenceC[i];
-        occurrenceG[i + 1] = occurrenceG[i];
-        occurrenceA[i + 1] = occurrenceA[i];
-        break;
-    }
-  });
-
-  let result = [];
-  for (let i = 0; i < M; i++) {
-    if (occurrenceA[Q[i] + 1] > occurrenceA[P[i]]) {
-      result.push(1);
-    } else if (occurrenceC[Q[i] + 1] > occurrenceC[P[i]]) {
-      result.push(2);
-    } else if (occurrenceG[Q[i] + 1] > occurrenceG[P[i]]) {
-      result.push(3);
-    } else {
-      result.push(4);
+    if (Math.abs(left - right) < result) {
+      result = Math.abs(left - right)
     }
   }
 
-  return result;
+  return result
 }
