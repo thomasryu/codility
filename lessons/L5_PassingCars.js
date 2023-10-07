@@ -43,34 +43,16 @@ Unauthorized copying, publication or disclosure prohibited.
 */
 
 function solution(A) {
-  let result = 0;
-  let eastwardCars = 0;
-  let westwardCars = 0;
+  let result = 0
+  let eastwardCars = 0
 
-  // We know that, for a vehicle X going east (i.e. A[X] = 0), all eastward vehicles
-  // whose indexes are lower than E also crossed by the same vehicles X did
-
-  // Thus we keep track of the current number of eastward vehicles (E) and, when
-  // encountering a new eastward vehicle, we count the vehicled it passed through (W) and
-  // add (E * W) to the counter
-  A.forEach((a, i) => {
-    if (a == 1) {
-      westwardCars++;
-
-      // If the last car in the array goes west, we also need to add to the results
-      if (i == A.length - 1) {
-        result += eastwardCars * westwardCars;
-      }
-    }
-
-    // After calculating results after finding a eastward car, we need to reset
-    // the westward cars count
+  A.forEach((a) => {
     if (a == 0) {
-      result += eastwardCars * westwardCars;
-      eastwardCars++;
-      westwardCars = 0;
+      eastwardCars++
+    } else {
+      result += eastwardCars
     }
-  });
+  })
 
-  return result <= 1000000000 ? result : -1;
+  return result > 1000000000 ? -1 : result
 }
