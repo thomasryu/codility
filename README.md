@@ -4,7 +4,28 @@
 
 <br/>
 
-## Notes
+# Notes
+
+- [1. Sets](#1-sets)
+- [2. Divisible numbers](#2-divisible-numbers)
+- [3. Prefix sum](#3-prefix-sum)
+- [4. Minimum average](#4-minimum-average)
+- [5. Triangle](#5-triangle)
+- [6. Stone wall](#6-stone-wall)
+- [7. Equilibrium leaders](#7-equilibrium-leaders)
+- [8. Maximum slice](#8-maximum-slice)
+- [9. Counting factors](#9-counting-factors)
+- [10. Flag](#10-flag)
+- [11. Sieve of Eratosthenes](#11-sieve-of-eratosthenes)
+- [12. Factorization](#12-factorization)
+- [13. Euclidian Algorithm (Greatest Common Divisor)](#13-euclidian-algorithm--greatest-common-divisor-)
+  - [Subtraction → O(N)](#subtraction---o-n-)
+  - [Division → O(log(N))](#division---o-log-n--)
+  - [Binary → O(log(N))](#binary---o-log-n----more-efficient-than-division-for-large-numbers-)
+  - [Least Common Multiple → O(log(N))](#least-common-multiple---o-log-n--)
+- [14. Common Prime Divisors](#14-common-prime-divisors)
+
+<br/>
 
 ## 1. Sets
 
@@ -162,8 +183,8 @@ An algorithm that returns a boolean array P of length n, where if i is a prime n
 - As we've seen in _Counting factors_, we only need to iterate i over [ 2, …, sqrt(N) ]
 - To further improve this, notice how for a number i, we don't need to verify multiples smaller than i^2, because these numbers already been squashed in previous steps (by the other factor of said numbers)
 
-  ![Notice how, for i = 3, 6 has already marked in a previous step (in i = 2).](https://i.postimg.cc/cHLK9L5t/Screenshot-2023-10-09-at-13-33-17.png)
-  Notice how, for i = 3, 6 has already marked in a previous step (in i = 2).
+  ![Notice how, for i = 3, 6 has already marked in a previous step (in i = 2).](https://i.postimg.cc/cHLK9L5t/Screenshot-2023-10-09-at-13-33-17.png) <br/>
+  <small>Notice how, for i = 3, 6 has already marked in a previous step (in i = 2).</small>
 
 ```jsx
 const createSieve = (N) => {
