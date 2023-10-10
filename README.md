@@ -117,7 +117,7 @@ After that we just iterate over B and get the highest value. Even further, we do
 
 ## 9. Counting factors
 
-Given N, we know that if a N is divisible by a number X, then N / X also is a divisor of N.
+Given N, we know that if a N is divisible by a number X, then N / X also is a divisor of N.<br/>
 _I.e.:_ `N % X = 0` → `N = X * Y` → `Y = N / X` → `N % Y = 0`
 
 We also know at least X or Y is lesser or equal to sqrt(N) (otherwise X \* Y > N). Thus we can improve a counter algorithm from being **O(N)** to **O(sqrt(N))**, and incrementing the counter by 2 each time we find a match (because we are adding both X and Y) or 1 if X == sqrt(N) (otherwise we would add X twice to the counter).
@@ -156,15 +156,14 @@ An algorithm that returns a boolean array P of length n, where if i is a prime n
 - First, we create P and fill it with the value true (i.e., we assume all numbers are prime)
 - Initially, from an outer loop, we iterate each number i in range [ 2, 3, 4, …, N ], marking every multiple of i as `false` (this will have an O(Nˆ2) cost).
 
-  ![Screenshot 2023-10-09 at 13.15.08.png](https://file.notion.so/f/f/9645a2a0-3ebe-4439-afd7-b640bae29074/ebd52bd9-1ec4-4e0c-8d28-4b0d4c8e6f81/Screenshot_2023-10-09_at_13.15.08.png?id=ad803dd8-b72e-4af1-8fdb-7a37b8aeb94b&table=block&spaceId=9645a2a0-3ebe-4439-afd7-b640bae29074&expirationTimestamp=1697068800000&signature=z8Osh0rE6cVTf8mv0Y1-N-4opAECRTKC8h6Chf-zBbE&downloadName=Screenshot+2023-10-09+at+13.15.08.png)
+  ![Screenshot-2023-10-09-at-13-15-08.png](https://i.postimg.cc/Gp1GQrCv/Screenshot-2023-10-09-at-13-15-08.png)
 
-  - To improve this algorithm, we only need to iterate over numbers i where `P[i] === true` (i.e., numbers that still haven't been marked non-prime by previous steps)
-  - As we've seen in _Counting factors_, we only need to iterate i over [ 2, …, sqrt(N) ]
-  - To further improve this, notice how for a number i, we don't need to verify multiples smaller than i^2, because these numbers already been squashed in previous steps (by the other factor of said numbers)
+- To improve this algorithm, we only need to iterate over numbers i where `P[i] === true` (i.e., numbers that still haven't been marked non-prime by previous steps)
+- As we've seen in _Counting factors_, we only need to iterate i over [ 2, …, sqrt(N) ]
+- To further improve this, notice how for a number i, we don't need to verify multiples smaller than i^2, because these numbers already been squashed in previous steps (by the other factor of said numbers)
 
-    ![Notice how, for i = 3, 6 has already marked in a previous step (in i = 2).](https://file.notion.so/f/f/9645a2a0-3ebe-4439-afd7-b640bae29074/42c12f03-a39e-4abb-90f6-29aa887703e7/Screenshot_2023-10-09_at_13.33.17.png?id=3c448d80-4d52-4fa7-bcd5-b310895debc5&table=block&spaceId=9645a2a0-3ebe-4439-afd7-b640bae29074&expirationTimestamp=1697068800000&signature=O39YsyIIpOd2ZMt-Y_NUhpN08FXkQqPU83t3bIhKupU&downloadName=Screenshot+2023-10-09+at+13.33.17.png)
-
-    Notice how, for i = 3, 6 has already marked in a previous step (in i = 2).
+  ![Notice how, for i = 3, 6 has already marked in a previous step (in i = 2).](https://i.postimg.cc/cHLK9L5t/Screenshot-2023-10-09-at-13-33-17.png)
+  Notice how, for i = 3, 6 has already marked in a previous step (in i = 2).
 
 ```jsx
 const createSieve = (N) => {
@@ -192,7 +191,7 @@ Factorization is the process of decomposing a number into prime numbers.
 
 To solve this problem, we create modify the Sieve of Eratosthenes algorithm to, instead of saving either `true` or `false` in the array, it saves the smallest prime number that is a factor of i (or 0 if it's a prime number).
 
-![Screenshot 2023-10-09 at 13.48.58.png](https://file.notion.so/f/f/9645a2a0-3ebe-4439-afd7-b640bae29074/5d73523f-741b-4965-bb77-04f153c75df0/Screenshot_2023-10-09_at_13.48.58.png?id=8ac1968c-1435-4937-b5d7-f2157d94690f&table=block&spaceId=9645a2a0-3ebe-4439-afd7-b640bae29074&expirationTimestamp=1697068800000&signature=TWl3-a_zP0Iqmq5S8NgO6qzzNsSxmeYQaYHkYOspA20&downloadName=Screenshot+2023-10-09+at+13.48.58.png)
+![Screenshot 2023-10-09 at 13.48.58.png](https://i.postimg.cc/RFhF1bNc/Screenshot-2023-10-09-at-13-48-58.png)
 
 ```jsx
 const createSieve = (N) => {
