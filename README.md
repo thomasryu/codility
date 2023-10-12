@@ -24,6 +24,8 @@
   - [Binary → O(log(N))](#binary---o-log-n----more-efficient-than-division-for-large-numbers-)
   - [Least Common Multiple → O(log(N))](#least-common-multiple---o-log-n--)
 - [14. Common Prime Divisors](#14-common-prime-divisors)
+- [15. Fibonacci Frog](#15-fibonacci-frog)
+- [16. Ladder](#16-ladder)
 
 <br/>
 
@@ -382,3 +384,67 @@ function solution(A, B) {
   return result
 }
 ```
+
+<br/>
+
+## 15. Fibonacci Frog
+
+Instead of iterating over every possibility and getting the result that yields the least amount of jumps, we can create an array `reachable` where, for a position `i` in the river, `reachable[i]` returns the minimal amount of fibonacci jumps to reach `i`.
+
+```jsx
+function solution(A) {
+  const leaves = [...A, 1] // We count the other shore as a reachable point
+  const N = leaves.length
+
+  // Array with all fibonacci numbers - O(log(N))
+  const fibonacci = [0, 1]
+  for (let i = 2; fibonacci[i - 1] + fibonacci[i - 2] <= N + 1; i++) {
+    fibonacci.push(fibonacci[i - 1] + fibonacci[i - 2])
+  }
+
+  // An array that stores the optimal number of jumps to reach i
+  const reachable = Array(N).fill(-1)
+
+  // From the starting point (-1), we get all the points reachable by the frog
+  const starting = -1
+  fibonacci.forEach((f) => {
+    if (leaves[f + starting] == 1) {
+      reachable[f + starting] = 1
+    }
+  })
+
+  // We calculate the minimum reachable for each position in the river - O(N * log(N))
+  for (let i = 0; i < N; i++) {
+    // If there are no leaves or if a minimum path was already calculated, skip
+    if (leaves[i] == 0 || reachable[i] > 0) {
+      continue
+    }
+    // Else, we calculate the minimum by iterating over previous steps reachable by a fibonacci jump
+    // if the minimum + 1 of said step if lower than the current step, we update it
+    fibonacci.forEach((f) => {
+      const previousIndex = i - f
+      if (previousIndex >= 0) {
+        if (reachable[previousIndex] > 0) {
+          const currentScore = reachable[previousIndex] + 1
+          if (currentScore <= reachable[i] || reachable[i] == -1) {
+            reachable[i] = currentScore
+          }
+        }
+      }
+    })
+  }
+
+  // After everything is calculated, we just need to obtain the minimum for N
+  // (N - 1 in this case since we added 1 more "leaf" to the array at the start)
+  return reachable[N - 1]
+}
+```
+
+<br/>
+
+## 16. Ladder
+
+The trick here is realizing:
+
+1. For a ladder of size X, `fibonacci[X + 1]` gives me the total possible ways the ladder can be climbed.
+2. Given Y, and A and B, `(Y % A) % B = Y % B`, so instead of storing absurdly large Fibonacci numbers, we only need to store their value modulo 2^30, which is the given maximum.
