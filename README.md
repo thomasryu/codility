@@ -18,14 +18,16 @@
 - [10. Flag](#10-flag)
 - [11. Sieve of Eratosthenes](#11-sieve-of-eratosthenes)
 - [12. Factorization](#12-factorization)
-- [13. Euclidian Algorithm (Greatest Common Divisor)](#13-euclidian-algorithm--greatest-common-divisor-)
+- [13. Euclidian Algorithm (greatest common divisor)](#13-euclidian-algorithm--greatest-common-divisor-)
   - [Subtraction → O(N)](#subtraction---o-n-)
   - [Division → O(log(N))](#division---o-log-n--)
   - [Binary → O(log(N))](#binary---o-log-n----more-efficient-than-division-for-large-numbers-)
-  - [Least Common Multiple → O(log(N))](#least-common-multiple---o-log-n--)
-- [14. Common Prime Divisors](#14-common-prime-divisors)
-- [15. Fibonacci Frog](#15-fibonacci-frog)
+  - [Least common multiple → O(log(N))](#least-common-multiple---o-log-n--)
+- [14. Common prime divisors](#14-common-prime-divisors)
+- [15. Fibonacci frog](#15-fibonacci-frog)
 - [16. Ladder](#16-ladder)
+- [17. Min max division](#17-min-max-division)
+- [16. Nailed planks](#18-nailed-planks)
 
 <br/>
 
@@ -250,7 +252,7 @@ const factorization = (x, P) => {
 
 <br/>
 
-## 13. Euclidian Algorithm (Greatest Common Divisor)
+## 13. Euclidian Algorithm (greatest common divisor)
 
 ### Subtraction → O(N)
 
@@ -303,7 +305,7 @@ const gcd = (x, y, result) => {
 }
 ```
 
-### Least Common Multiple → O(log(N))
+### Least common multiple → O(log(N))
 
 ```jsx
 const lcm = (x, y) => {
@@ -315,7 +317,7 @@ const lcm = (x, y) => {
 
 <br/>
 
-## 14. Common Prime Divisors
+## 14. Common prime divisors
 
 The straightforward idea would be to use the factorization algorithm and compare if both the sets of prime factors of A and B are the same. However the problem lies the space required for the sieve array if A or B are very large numbers.
 
@@ -387,7 +389,7 @@ function solution(A, B) {
 
 <br/>
 
-## 15. Fibonacci Frog
+## 15. Fibonacci frog
 
 Instead of iterating over every possibility and getting the result that yields the least amount of jumps, we can create an array `reachable` where, for a position `i` in the river, `reachable[i]` returns the minimal amount of fibonacci jumps to reach `i`.
 
@@ -448,3 +450,79 @@ The trick here is realizing:
 
 1. For a ladder of size X, `fibonacci[X + 1]` gives me the total possible ways the ladder can be climbed.
 2. Given Y, and A and B, `(Y % A) % B = Y % B`, so instead of storing absurdly large Fibonacci numbers, we only need to store their value modulo 2^30, which is the given maximum.
+
+<br/>
+
+## 17. Min max division
+
+The challenge of a binary search problem is:
+
+1. To determine what will be searched
+2. What the “check” algorithm will do and return each step
+
+For this problem,
+
+1. We are searching for the large sum value directly
+2. The “check” algorithm returns the number of blocks required to reach a large sum lower or equal to the one given
+
+```jsx
+function solution(K, M, A) {
+  // Highest value in A
+  let maxA = 0
+  A.forEach((a) => {
+    if (a > maxA) {
+      maxA = a
+    }
+  })
+
+  // The largest possible large sum
+  let largeSum = A.reduce((a, c) => a + c)
+
+  // The minimum largest sum should be between maxA (i.e., a block that only contains it)
+  // and largeSum (i.e., a block that contains all elements of A)
+  let start = maxA
+  let end = largeSum
+
+  // Function that returns the necessary blocks
+  // to reach certain a large sum lower or equal to largeSum
+  const getRequiredBlocks = (largeSum) => {
+    let sum = 0
+    let count = 0
+    A.forEach((a) => {
+      if (sum + a > largeSum) {
+        sum = 0
+        count++
+      }
+      sum += a
+    })
+
+    return count
+  }
+
+  // The goal here is to check if we can squeeze the result in blocks of lower size
+
+  // Note that, the more evenly we distribute the blocks (i.e., the lower the size of each non-empty block),
+  // the lower large sum is
+  while (start <= end) {
+    let mid = Math.floor((start + end) / 2)
+
+    // So if our predicted block count is lower than K,
+    // we can split A even further, lowering our large sum
+    if (getRequiredBlocks(mid) < K) {
+      end = mid - 1
+    } else {
+      start = mid + 1
+    }
+  }
+
+  return start
+}
+```
+
+<br/>
+
+## 18. Nailed planks
+
+The secret here is having a prefix array P based on the nails array, where `P[i]` gives us how many nails there are until the `i` index, and we can check whether a position or interval contains a nail in O(1) time (by calculating `(P[b] - P[a - 1]) > 0`).
+
+This allows us to determine if, given a nail position, all planks are nailed in O(N + M).
