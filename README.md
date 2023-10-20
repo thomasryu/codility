@@ -27,7 +27,9 @@
 - [15. Fibonacci frog](#15-fibonacci-frog)
 - [16. Ladder](#16-ladder)
 - [17. Min max division](#17-min-max-division)
-- [16. Nailed planks](#18-nailed-planks)
+- [18. Nailed planks](#18-nailed-planks)
+- [19. Minimum absolute sum of two](#19-minimum-absolute-sum-of-two)
+- [20. Array inversion count](#20-array-inversion-count)
 
 <br/>
 
@@ -526,3 +528,75 @@ function solution(K, M, A) {
 The secret here is having a prefix array P based on the nails array, where `P[i]` gives us how many nails there are until the `i` index, and we can check whether a position or interval contains a nail in O(1) time (by calculating `(P[b] - P[a - 1]) > 0`).
 
 This allows us to determine if, given a nail position, all planks are nailed in O(N + M).
+
+<br/>
+
+## 19. Minimum absolute sum of two
+
+Finding the minimum absolute sum of two numbers (which can be the same index) in an array is very easy when they are all positive or negative: you just find the element with the lowest absolute value and use it twice.
+
+The problem arrives when combining positives and negatives, which can be result in lower results. The solution is to use the caterpillar method, but starting from both edges of the sorted array. The algorithm goes as follows:
+
+```jsx
+function solution(A) {
+  const N = A.length
+  const sortedA = A.sort((a, b) => a - b)
+
+  let head = N - 1
+  let tal = 0
+  let result = Math.abs(sortedA[start] - sortedA[end])
+
+  while (tail <= head) {
+    const sum = sortedA[head] - sortedA[tail]
+    result = Math.min(result, Math.abs(sum))
+
+    // Since we are not using absolute values yet, if the sum is larger than 0,
+    // we know the head can be moved left else the tail can be moved right
+    // (since we are trying to reach values closes to 0)
+    if (sum > 0) head--
+    else tail++
+  }
+
+  return result
+}
+```
+
+<br/>
+
+## 20. Array inversion count
+
+An inversion happens when elements with higher indexes have lower values (e.g., `[1, 0]`). To count the amount of inversions in an array in lesser than O(Nˆ2), we can use the merge sort algorith, which is based on fixing inversions: Every time the algorithm finds an inverted element, and fixes it, we increment the count accordingly (which isn't necessarily by 1).
+
+```jsx
+let result = 0
+
+const merge = (left, right) => {
+  let output = []
+  while (left.length > 0 && right.length > 0) {
+    if (left[0] <= right[0]) {
+      output.push(left.shift())
+    } else {
+      output.push(right.shift())
+
+      // We found an inversion:
+      // - A value of the right half whose value is lower than all of the left
+      // - This means, all of the left are inversions to the right element
+      //   - because even though their indexes are lower, their values are higher
+      // - Therefore we add the number of elements in the left side to the count
+      result += left.length
+    }
+  }
+
+  return [...output, ...left, ...right]
+}
+
+const mergeSort = (x) => {
+  if (x.length < 2) return x
+
+  const half = Math.floor(x.length / 2)
+  const right = [...x]
+  const left = right.splice(0, half)
+
+  return merge(mergeSort(left), mergeSort(right))
+}
+```

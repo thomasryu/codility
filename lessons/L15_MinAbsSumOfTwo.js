@@ -87,18 +87,19 @@ function solution(A) {
   const N = A.length
   const sortedA = A.sort((a, b) => a - b)
 
-  let start = N - 1
-  let end = 0
-  let result = Math.abs(sortedA[start] - sortedA[end])
+  let head = N - 1
+  let tail = 0
+  let result = Math.abs(sortedA[head] - sortedA[tail])
 
-  while (end <= start) {
-    const sum = sortedA[start] - sortedA[end]
+  while (tail <= head) {
+    const sum = sortedA[head] - sortedA[tail]
     result = Math.min(result, Math.abs(sum))
 
-    // If the sum is larger than 0, we know the start can be moved left
-    // else the end can be moved right
-    if (sum > 0) start--
-    else end++
+    // Since we are not using absolute values yet, if the sum is larger than 0,
+    // we know the head can be moved left else the tail can be moved right
+    // (since we are trying to reach values closes to 0)
+    if (sum > 0) head--
+    else tail++
   }
 
   return result
