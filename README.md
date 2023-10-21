@@ -30,6 +30,7 @@
 - [18. Nailed planks](#18-nailed-planks)
 - [19. Minimum absolute sum of two](#19-minimum-absolute-sum-of-two)
 - [20. Array inversion count](#20-array-inversion-count)
+- [21. Minimum absolute sum](#21-minimum-absolute-sum)
 
 <br/>
 
@@ -598,5 +599,80 @@ const mergeSort = (x) => {
   const left = right.splice(0, half)
 
   return merge(mergeSort(left), mergeSort(right))
+}
+```
+
+<br/>
+
+## 21. Minimum absolute sum
+
+To find a combination where sum of positives and negatives of elements in an array result in a minimal absolute value, efficiently, we have to calculate a few things:
+
+1. First we convert each element of `A` into their absolutes, because their signals don't matter
+2. The sum `S` of the values of the new array `A`
+3. The highest value `M` of `A`
+4. A `count` array, were we count the occurrences of each value inside `A`. The size of this array will be `M+1`.
+5. And a dynamic programming array `DP`, where `DP[i]` tells me if a value `i` is a possible sum of a partial sum of elements of `A`.
+   1. It's value will be -1 if it's not possible, higher or equal to 0 if it is.
+   2. More specifically, we will loop over each possible value `a` of `A` and, at each iteration, `DP[i]` will be assigned the amount of `a`’s it took to reach the sum `i`.
+   3. This value will vary over each iteration but what's important is it will be higher or equal to 0 if the sum is reachable AND it will tell whether other sums are reachable in future iterations if it's higher than 0
+
+```jsx
+function solution(A) {
+  const N = A.length
+  let M = 0
+
+  if (N == 0) return 0
+  if (N == 1) return Math.abs(A[0])
+
+  let absA = []
+  for (let i = 0; i < N; i++) {
+    absA[i] = Math.abs(A[i])
+    M = Math.max(absA[i], M)
+  }
+
+  // Differently from the previous attempt, we store the quantity of each
+  // number from -100 to 100 inside A
+  const count = Array(M + 1).fill(0)
+  absA.forEach((a) => (count[a] = count[a] + 1))
+
+  const S = absA.reduce((a, c) => a + c)
+
+  // Instead of a boolean, DP[i] will be >= 0 if it's achievable, -1 otherwise
+  // more specifically, it will contain the remaining count of an element of A,
+  // which was required to reach it (which element it was and the value doesn't matter,
+  // because it will change over time), however all that matter is its value is higher than -1
+  const DP = Array(S + 1).fill(-1)
+  DP[0] = 0
+
+  // Now we fill the DP array using the created count array
+  for (let a = 0; a <= M + 1; a++) {
+    if (count[a] > 0) {
+      for (let i = 0; i <= S; i++) {
+        // If we find a previously achievable value, we know no element a was required to reach it
+        // thus we can fill DP[i] with the fill count[a]
+        if (DP[i] >= 0) {
+          DP[i] = count[a]
+        }
+        // If the sum i, however, was not reached, we verify if it is reachable and, if it is,
+        // update its value with the proper count of a
+        else if (i - a >= 0 && DP[i - a] > 0) {
+          DP[i] = DP[i - a] - 1
+        }
+      }
+    }
+  }
+
+  let result = S
+  for (let i = 0; i <= Math.floor(S / 2); i++) {
+    if (DP[i] >= 0) {
+      // Consider S = P + Q -> Q = S - P
+      // what we want to find is Q - P
+      // which combining the first two equations, we have Q - P = S - 2 * P
+      result = Math.min(result, S - 2 * i)
+    }
+  }
+
+  return result
 }
 ```
