@@ -27,33 +27,72 @@ Unauthorized copying, publication or disclosure prohibited.
 
 */
 
+// Attempt 1: A solution using regex
 function solution(N) {
   // Convert N to binary (in string format)
-  const binary = (N >>> 0).toString(2);
+  const binary = (N >>> 0).toString(2)
 
   // Function which returns every match of regex,
   // even if they overlap with previous matches
   // (which standard .match() is not capable of)
   const getGaps = (regex) => {
-    let match = regex.exec(binary);
-    const results = [];
+    let match = regex.exec(binary)
+    const results = []
 
     while (match) {
-      results.push(match[0]);
-      regex.lastIndex = match.index + 1;
-      match = regex.exec(binary);
+      results.push(match[0])
+      regex.lastIndex = match.index + 1
+      match = regex.exec(binary)
     }
 
-    return results;
-  };
+    return results
+  }
 
-  const zeroGaps = getGaps(/1(0+)1/g).map((s) => s.replace(/1/g, ''));
-  const oneGaps = getGaps(/0(1+)0/g).map((s) => s.replace(/0/g, ''));
+  const zeroGaps = getGaps(/1(0+)1/g).map((s) => s.replace(/1/g, ''))
+  const oneGaps = getGaps(/0(1+)0/g).map((s) => s.replace(/0/g, ''))
 
   // Array with the lengths of all 0 and 1 gaps
   const gaps = [...zeroGaps, ...oneGaps]
     .map((g) => g.length)
-    .sort((a, b) => b - a);
+    .sort((a, b) => b - a)
 
-  return gaps.length > 0 ? gaps[0] : 0;
+  return gaps.length > 0 ? gaps[0] : 0
+}
+
+// Attempt 2: A solution using loops
+function solution(N) {
+  if (N.length <= 2) return 0
+
+  const binary = (N >>> 0).toString(2)
+
+  let result = 0
+  let count = 0
+
+  let bit = binary[0]
+  let otherBit = {
+    0: '1',
+    1: '0',
+  }
+
+  // Since the first switch in bit doesn't imply a gap, we skip it
+  let i = 1
+  while (binary[i] == bit && i < binary.length) {
+    i++
+  }
+  bit = otherBit[bit]
+
+  // From now on, each switch creates a gap wo we count their length
+  // and compare to the current maximum length
+  for (i; i < binary.length; i++) {
+    if (binary[i] == bit) {
+      count++
+    }
+    if (binary[i] == otherBit[bit]) {
+      bit = otherBit[bit]
+      result = Math.max(result, count)
+      count = 1
+    }
+  }
+
+  return result
 }
