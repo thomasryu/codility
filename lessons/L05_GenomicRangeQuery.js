@@ -24,7 +24,8 @@ The answers to these M = 3 queries are as follows:
 Write a function:
   function solution(S, P, Q);
 
-that, given a non-empty string S consisting of N characters and two non-empty arrays P and Q consisting of M integers, returns an array consisting of M integers specifying the consecutive answers to all queries.
+that, given a non-empty string S consisting of N characters and two non-empty arrays P and Q consisting of M integers,
+returns an array consisting of M integers specifying the consecutive answers to all queries.
 
 Result array should be returned as an array of integers.
 
